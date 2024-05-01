@@ -23,5 +23,10 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
     ],
+    entry_points={
+        'console_scripts': [
+            'hello-wordsmith=hello_wordsmith.hello_wordsmith:main',
+        ],
+    },
     python_requires='>=3.6',
 )
