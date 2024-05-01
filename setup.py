@@ -11,6 +11,9 @@ setup(
     author_email="derek@wordsmith.ai",
     license="MIT",
     packages=find_packages(),
+    package_data={
+        'hello_wordsmith': ['public_wordsmith_dataset/*'],
+    },
     install_requires=["llama-index", "chromadb", "llama-index-vector-stores-chroma"],
     classifiers=[
         "Intended Audience :: End Users",
