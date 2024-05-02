@@ -16,7 +16,7 @@ setup(
     },
     install_requires=[
         "chromadb~=0.5.0",
-        "llama-index-core~=0.10.33",
+        "llama-index-core==0.10.33",
         "llama-index-llms-openai~=0.1.16",
         "llama-index-embeddings-openai~=0.1.9",
         "llama-index-vector-stores-chroma~=0.1.7",

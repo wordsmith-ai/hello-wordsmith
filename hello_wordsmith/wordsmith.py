@@ -1,7 +1,7 @@
-# Standard library imports
+from argparse import ArgumentParser
 import os
+import sys
 
-# Third-party imports
 import chromadb
 from llama_index.core import (
     SimpleDirectoryReader,
@@ -16,12 +16,6 @@ from llama_index.core.storage.docstore import SimpleDocumentStore
 from llama_index.cli.rag import RagCLI
 from llama_index.llms.openai import OpenAI
 from llama_index.vector_stores.chroma import ChromaVectorStore
-
-
-def setup_environment():
-    """Set up environment variables, ideally load from .env file for production"""
-    # os.environ["OPENAI_API_KEY"] = "sk-xxx"
-    pass
 
 
 def initialize_chroma_db():
@@ -53,7 +47,7 @@ def configure_query_pipeline(index, llm):
     """Configure and set up the query pipeline"""
     prompt_str = "Please generate related movies to {query_str}"
     prompt_tmpl = PromptTemplate(prompt_str)
-    query_pipeline = QueryPipeline(verbose=True)
+    query_pipeline = QueryPipeline()
 
     retriever = index.as_retriever(similarity_top_k=5)
     summarizer = TreeSummarize(llm=llm, streaming=True)
@@ -72,22 +66,30 @@ def configure_query_pipeline(index, llm):
     return query_pipeline
 
 
-def create_rag_cli(ingestion_pipeline, llm, query_pipeline):
-    """Create the RAG CLI instance"""
-    rag_cli_instance = RagCLI(
-        ingestion_pipeline=ingestion_pipeline, llm=llm, query_pipeline=query_pipeline
-    )
-    return rag_cli_instance
+class WordsmithRAGCLI(RagCLI):
+
+    def cli(self) -> None:
+        """
+        Entrypoint for CLI tool.
+        """
+        if len(sys.argv) == 1:
+            sys.argv.extend(["rag", "-c"])
+        elif "rag" not in sys.argv:
+            sys.argv.insert(1, "rag")
+        super().cli()
 
 
 def main():
-    setup_environment()
     vector_store = initialize_chroma_db()
     index = setup_document_storage(vector_store)
     llm = initialize_llm()
     query_pipeline = configure_query_pipeline(index, llm)
     ingestion_pipeline = IngestionPipeline(vector_store=vector_store)
-    rag_cli_instance = create_rag_cli(ingestion_pipeline, llm, query_pipeline)
+    rag_cli_instance = WordsmithRAGCLI(
+        ingestion_pipeline=ingestion_pipeline,
+        llm=llm,
+        query_pipeline=query_pipeline
+    )
     rag_cli_instance.cli()
 
 
