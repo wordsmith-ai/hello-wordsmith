@@ -1,19 +1,16 @@
-from argparse import ArgumentParser
 import os
 import sys
 
 import chromadb
-from llama_index.core import (
-    SimpleDirectoryReader,
-    VectorStoreIndex,
-    StorageContext,
-    PromptTemplate,
-)
+from llama_index.cli.rag import RagCLI
+from llama_index.core import (ChatPromptTemplate, SimpleDirectoryReader,
+                              StorageContext, VectorStoreIndex)
+from llama_index.core.base.llms.types import ChatMessage, MessageRole
 from llama_index.core.ingestion import IngestionPipeline
-from llama_index.core.query_pipeline import QueryPipeline, InputComponent
+from llama_index.core.prompts.base import ChatPromptTemplate
+from llama_index.core.query_pipeline import InputComponent, QueryPipeline
 from llama_index.core.response_synthesizers import TreeSummarize
 from llama_index.core.storage.docstore import SimpleDocumentStore
-from llama_index.cli.rag import RagCLI
 from llama_index.llms.openai import OpenAI
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
@@ -43,14 +40,50 @@ def initialize_llm():
     return llm
 
 
+_system_prompt = ChatMessage(
+    content=(
+        "You are an expert Q&A analyst representing Wordsmith in front of "
+        "potentially interested users.\n"
+        "If the question is related to Wordsmith in any way, "
+        "answer the query using the provided context information.\n"
+        "If you can't find the answer in the provided context information, "
+        "simply say you don't have enough information to answer the query.\n"
+        "Always be polite and professional.\n"
+        "Some rules to follow:\n"
+        "1. Never directly reference the given context in your answer.\n"
+        "2. Avoid statements like 'Based on the context, ...' or "
+        "'The context information ...', etc."
+    ),
+    role=MessageRole.SYSTEM,
+)
+
+_chat_template_messages = [
+    _system_prompt,
+    ChatMessage(
+        content=(
+            "Context information from multiple sources is below.\n"
+            "---------------------\n"
+            "{context_str}\n"
+            "---------------------\n"
+            "Given the information from multiple sources and not prior knowledge, "
+            "answer the query.\n"
+            "Query: {query_str}\n"
+            "Answer: "
+        ),
+        role=MessageRole.USER,
+    ),
+]
+
+
 def configure_query_pipeline(index, llm):
     """Configure and set up the query pipeline"""
-    prompt_str = "Please generate related movies to {query_str}"
-    prompt_tmpl = PromptTemplate(prompt_str)
+    text_qa_chat_template = ChatPromptTemplate.from_messages(_chat_template_messages)
     query_pipeline = QueryPipeline()
 
     retriever = index.as_retriever(similarity_top_k=5)
-    summarizer = TreeSummarize(llm=llm, streaming=True)
+    summarizer = TreeSummarize(
+        llm=llm, streaming=True, summary_template=text_qa_chat_template
+    )
 
     query_pipeline.add_modules(
         {
@@ -67,7 +100,6 @@ def configure_query_pipeline(index, llm):
 
 
 class WordsmithRAGCLI(RagCLI):
-
     def cli(self) -> None:
         """
         Entrypoint for CLI tool.
@@ -86,9 +118,7 @@ def main():
     query_pipeline = configure_query_pipeline(index, llm)
     ingestion_pipeline = IngestionPipeline(vector_store=vector_store)
     rag_cli_instance = WordsmithRAGCLI(
-        ingestion_pipeline=ingestion_pipeline,
-        llm=llm,
-        query_pipeline=query_pipeline
+        ingestion_pipeline=ingestion_pipeline, llm=llm, query_pipeline=query_pipeline
     )
     rag_cli_instance.cli()
 

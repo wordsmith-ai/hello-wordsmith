@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="hello-wordsmith",
@@ -12,7 +12,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     package_data={
-        'hello_wordsmith': ['public_wordsmith_dataset/*'],
+        "hello_wordsmith": ["public_wordsmith_dataset/*"],
     },
     install_requires=[
         "chromadb~=0.5.0",
