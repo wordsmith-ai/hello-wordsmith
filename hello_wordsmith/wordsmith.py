@@ -16,7 +16,6 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 
 
 def initialize_chroma_db():
-    """Initialize the ChromaDB client and collection"""
     chroma_client = chromadb.EphemeralClient()
     chroma_collection = chroma_client.create_collection("wordsmith")
     vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
@@ -24,7 +23,6 @@ def initialize_chroma_db():
 
 
 def setup_document_storage(vector_store):
-    """Set up document storage and load data"""
     package_directory = os.path.dirname(os.path.abspath(__file__))
     dataset_path = os.path.join(package_directory, "public_wordsmith_dataset")
     reader = SimpleDirectoryReader(input_dir=dataset_path)
@@ -35,7 +33,6 @@ def setup_document_storage(vector_store):
 
 
 def initialize_llm():
-    """Initialize the Large Language Model"""
     llm = OpenAI(api_key=os.environ["OPENAI_API_KEY"], model="gpt-4")
     return llm
 
@@ -77,7 +74,9 @@ _chat_template_messages = [
 
 def configure_query_pipeline(index, llm):
     """Configure and set up the query pipeline"""
-    text_qa_chat_template = ChatPromptTemplate.from_messages(_chat_template_messages)
+    text_qa_chat_template = ChatPromptTemplate.from_messages(
+        _chat_template_messages
+    )
     query_pipeline = QueryPipeline()
 
     retriever = index.as_retriever(similarity_top_k=5)
@@ -118,7 +117,9 @@ def main():
     query_pipeline = configure_query_pipeline(index, llm)
     ingestion_pipeline = IngestionPipeline(vector_store=vector_store)
     rag_cli_instance = WordsmithRAGCLI(
-        ingestion_pipeline=ingestion_pipeline, llm=llm, query_pipeline=query_pipeline
+        ingestion_pipeline=ingestion_pipeline,
+        llm=llm,
+        query_pipeline=query_pipeline
     )
     rag_cli_instance.cli()
 
