@@ -114,6 +114,10 @@ class WordsmithRAGCLI(RagCLI):
 
 
 def main():
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("Error: Environment variable 'OPENAI_API_KEY' is not set. Please set this before running.")
+        sys.exit(1)
     vector_store = initialize_chroma_db()
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
     index = setup_document_storage(
