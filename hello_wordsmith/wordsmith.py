@@ -3,16 +3,27 @@ import sys
 
 import chromadb
 from llama_index.cli.rag import RagCLI
-from llama_index.core import (ChatPromptTemplate, SimpleDirectoryReader,
-                              StorageContext, VectorStoreIndex)
+from llama_index.core import (
+    ChatPromptTemplate,
+    SimpleDirectoryReader,
+    VectorStoreIndex
+)
 from llama_index.core.base.llms.types import ChatMessage, MessageRole
 from llama_index.core.ingestion import IngestionPipeline
-from llama_index.core.prompts.base import ChatPromptTemplate
 from llama_index.core.query_pipeline import InputComponent, QueryPipeline
 from llama_index.core.response_synthesizers import TreeSummarize
-from llama_index.core.storage.docstore import SimpleDocumentStore
+from llama_index.core import Settings
+from llama_index.embeddings.openai import (
+    OpenAIEmbedding,
+    OpenAIEmbeddingModelType
+)
 from llama_index.llms.openai import OpenAI
 from llama_index.vector_stores.chroma import ChromaVectorStore
+
+
+Settings.embed_model = OpenAIEmbedding(
+    model="text-embedding-3-small"
+)
 
 
 def initialize_chroma_db():
@@ -27,8 +38,7 @@ def setup_document_storage(vector_store):
     dataset_path = os.path.join(package_directory, "public_wordsmith_dataset")
     reader = SimpleDirectoryReader(input_dir=dataset_path)
     docs = reader.load_data()
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    index = VectorStoreIndex.from_documents(docs, storage_context=storage_context)
+    index = VectorStoreIndex.from_documents(docs)
     return index
 
 
@@ -79,7 +89,7 @@ def configure_query_pipeline(index, llm):
     )
     query_pipeline = QueryPipeline()
 
-    retriever = index.as_retriever(similarity_top_k=5)
+    retriever = index.as_retriever(similarity_top_k=20)
     summarizer = TreeSummarize(
         llm=llm, streaming=True, summary_template=text_qa_chat_template
     )
