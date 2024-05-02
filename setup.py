@@ -20,6 +20,8 @@ setup(
         "llama-index-llms-openai~=0.1.16",
         "llama-index-embeddings-openai~=0.1.9",
         "llama-index-vector-stores-chroma~=0.1.7",
+        "llama-index-cli~=0.1.12",
+        "llama-index-readers-file~=0.1.19",
     ],
     classifiers=[
         "Intended Audience :: End Users",
