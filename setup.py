@@ -6,7 +6,7 @@ setup(
     description="A simple Python package to interface with llama-index RAG over wordsmith data.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://huggingface.co/datasets/derek-at-work/test/source env/bin/activate",
+    url="https://huggingface.co/datasets/derek-at-work/test/",
     author="Derek Johnston",
     author_email="derek@wordsmith.ai",
     license="MIT",
@@ -24,8 +24,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "hello-wordsmith=hello_wordsmith.hello_wordsmith:main",
+            "hello-wordsmith=hello_wordsmith.wordsmith:main",
         ],
     },
-    python_requires=">=3.6",
+    python_requires=">=3.8",
 )
