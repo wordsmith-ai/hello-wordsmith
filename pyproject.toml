@@ -25,8 +25,11 @@ llama-index-embeddings-openai = "~0.1.9"
 llama-index-vector-stores-chroma = "~0.1.7"
 llama-index-cli = "~0.1.12"
 llama-index-readers-file = "~0.1.19"
+pydantic = "~2.7.1"
 
 [tool.poetry.dev-dependencies]
+black = "24.4.2"
+mypy = "1.10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
