@@ -5,7 +5,7 @@ description = "A simple Python package to wrap llama-index RAG CLI over Wordsmit
 authors = ["Derek Johnston <derek@wordsmith.ai>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://huggingface.co/derek-at-work/hello_wordsmith"
+homepage = "https://github.com/wordsmith-ai/hello-wordsmith"
 classifiers = [
     "Intended Audience :: End Users",
     "Topic :: Software Development :: Build Tools",
