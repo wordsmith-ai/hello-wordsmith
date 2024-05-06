@@ -11,6 +11,10 @@ from llama_index.llms.openai import OpenAI
 from .datastores import fetch_or_initialise_datastores
 from .query_pipeline import configure_query_pipeline
 
+import logging
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+
 
 class WordsmithRAGCLI(RagCLI):
     def cli(self) -> None:
@@ -35,6 +39,8 @@ def _init_env(func: Callable[[], None]) -> Callable[[], None]:
         Settings.embed_model = OpenAIEmbedding(
             model=OpenAIEmbeddingModelType.TEXT_EMBED_3_SMALL
         )
+        Settings.chunk_size = 512
+        Settings.chunk_overlap = 50
         return func()
 
     return wrapper

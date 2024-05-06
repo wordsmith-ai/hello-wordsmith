@@ -3,3 +3,4 @@ build
 env
 *.egg-info
 __pycache__
+./storage/**
