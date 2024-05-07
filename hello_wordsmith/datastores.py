@@ -30,30 +30,21 @@ def _get_chroma_db() -> chromadb.Collection:
 def fetch_or_initialise_datastores() -> InitialisedDataContainer:
     db = _get_chroma_db()
     vector_store = ChromaVectorStore(chroma_collection=db)
-    try:
-        docstore = SimpleDocumentStore.from_persist_dir(
-            persist_dir=os.path.join(default_ragcli_persist_dir(), "storage")
-        )
-    except FileNotFoundError:
-        docstore = SimpleDocumentStore()
+    docstore = SimpleDocumentStore()
     storage_context = StorageContext.from_defaults(
-        vector_store=vector_store, docstore=docstore
+        vector_store=vector_store, docstore=docstore,
     )
-    if not docstore.docs or not db.count():
+    if not db.count():
         package_directory = os.path.dirname(os.path.abspath(__file__))
         dataset_path = os.path.join(package_directory, "public_wordsmith_dataset")
         docs = SimpleDirectoryReader(
             input_dir=dataset_path, filename_as_id=True
         ).load_data()
         docstore.add_documents(docs)
-        docstore.persist(
-            persist_path=os.path.join(
-                default_ragcli_persist_dir(), "./storage/docstore.json"
-            )
-        )
         index = VectorStoreIndex.from_documents(
             documents=docs, storage_context=storage_context
         )
+        storage_context.persist(persist_dir=default_ragcli_persist_dir())
     else:
         index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
     return InitialisedDataContainer(

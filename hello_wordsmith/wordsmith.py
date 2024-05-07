@@ -11,10 +11,6 @@ from llama_index.llms.openai import OpenAI
 from .datastores import fetch_or_initialise_datastores
 from .query_pipeline import configure_query_pipeline
 
-import logging
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-
 
 class WordsmithRAGCLI(RagCLI):
     def cli(self) -> None:
