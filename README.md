@@ -12,6 +12,10 @@ Follow these steps to install and set up your environment:
 1. `pip install git+https://github.com/wordsmith-ai/hello-wordsmith -q`
 2. `export OPENAI_API_KEY="sk-..."`
 
+Note:
+It's best practice to work in a virtual Python environment, as opposed to your system's default  Python installation. Popular solutions include `venv`, `conda`, and `pipenv`. If you *do* use
+your system Python, make sure the bin dir is on your PATH, e.g. `export PATH="/Library/Frameworks/Python.framework/Versions/3.x/bin:${PATH}`
+
 **Usage**:
 1. `hello-wordsmith` # Launch an interactive chat.
 2. `hello-wordsmith -q 'What is article III about?'` # Single question and answer
