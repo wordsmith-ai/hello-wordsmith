@@ -23,7 +23,7 @@ your system Python, make sure the bin dir is on your PATH, e.g. `export PATH="/L
 **Use**:
 1. `hello-wordsmith` // Launch an interactive chat.
 2. `hello-wordsmith -q 'What is article III about?'` // Single question and answer
-3. `hello-wordsmith -f "./my_directory/*"` // Ingest and index your own data to query
+3. `hello-wordsmith -f "./my_directory/*" --chunk-size 256 --chunk-overlap 128` // Ingest and index your own data to query with custom document chunk sizes and overlaps
 4. `hello-wordsmith --clear` // Clear stored data
 
 **Example installation and usage via venv**
@@ -36,11 +36,10 @@ Using Python 3, on a Mac:
 4. `pip install git+https://github.com/wordsmith-ai/hello-wordsmith -q` // Install the hello-wordsmith package, suppressing output with the -q flag. Remove this flag to see install progress
 5. `export OPENAI_API_KEY="sk-..."` // Export your OpenAI key
 6. `hello-wordsmith -q 'What is article III about?'` // Send a single question, and wait for the answer to arrive using the RAG
-7. `hello-wordsmith` // Start the interactive assistant to ask questions and answers:
+7. `hello-wordsmith --chunk-size 256 --chunk-overlap 64` // Start the interactive assistant to ask questions and answers:
 
 <img width="509" alt="example" src="https://github.com/wordsmith-ai/hello-wordsmith/assets/1094502/beb3df38-734f-49b0-9d46-5d6386779e71">
 
 **Explore**:\
 As you can see, this repo is an extremely simplistic first step towards building a RAG system on your data. You can open up these files and explore how changing parameters like chunk size, or the 
-embedding model that we use, can influence the performance of the system. This is the beginning of 
-a grand journey!
+embedding model that we use, can influence the performance of the system.
