@@ -1,6 +1,6 @@
 # Hello Wordsmith
 
-This is the **Hello Wordsmith** package. This is a simple wrapper around the `llama-index CLI` project with some opinionated defaults. We aim to provide a "Hello World" experience using Retrieval-Augmented Generation (RAG).
+This is the **Hello Wordsmith** package. This is a simple wrapper around the `llama-index CLI` project with some opinionated defaults. We aim to provide a "Hello World" experience using Retrieval-Augmented Generation (RAG). For more context on what RAG is, tradeoffs and, and a detailed walthrough of this project, see [this The Pragmatic Engineer article](https://newsletter.pragmaticengineer.com/p/rag). 
 
 For detailed information about the `llamaindex-rag` project, visit the [official documentation](https://docs.llamaindex.ai/en/stable/getting_started/starter_tools/rag_cli/).
 
