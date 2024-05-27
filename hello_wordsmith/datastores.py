@@ -38,7 +38,7 @@ def fetch_or_initialise_datastores() -> InitialisedDataContainer:
         package_directory = os.path.dirname(os.path.abspath(__file__))
         dataset_path = os.path.join(package_directory, "public_wordsmith_dataset")
         docs = SimpleDirectoryReader(
-            input_dir=dataset_path, filename_as_id=True
+            input_dir=dataset_path, filename_as_id=True, exclude_hidden=False
         ).load_data()
         docstore.add_documents(docs)
         index = VectorStoreIndex.from_documents(
